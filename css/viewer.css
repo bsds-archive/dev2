@@ -77,17 +77,13 @@ body{ padding-top:0; }
    native pinch-zoom-then-pan, which expects to move the document's own
    scroll position, not reach into a nested scrollable div.
 
-   touch-action:none goes a step further: TOUCH input (as opposed to
-   mouse-wheel) is handed off entirely to JS — see _initTouchAndZoom()
-   in js/app.js. This was necessary because there's no reliable way for
-   a webpage to disable native pinch-zoom (mobile browsers ignore the
-   viewport-meta restriction for accessibility, desktop never honored it
-   at all), and native zoom's own panning kept only working vertically,
-   not horizontally, no matter how the scroll containers were arranged.
-   Taking over touch entirely and driving scroll/zoom ourselves — via
-   the same _setZoom() the toolbar buttons use, which never depended on
-   native zoom to begin with — sidesteps the problem completely instead
-   of continuing to fight it.
+   touch-action is intentionally left at its default (auto) rather than
+   overridden — touch scrolling and pinch-zoom are both left to the
+   browser natively, same as any ordinary webpage. There is no JS layer
+   taking over touch input here; an earlier design considered doing that
+   (to work around native zoom's panning being vertical-only) but it was
+   never implemented, and setting touch-action:none without that handler
+   in place just disables touch entirely, which is worse.
 
    The fixed header staying fixed doesn't require this element to scroll
    internally — position:fixed on the header alone is enough; padding-
@@ -95,7 +91,6 @@ body{ padding-top:0; }
    underneath it. */
 .viewer-stage{
   padding:28px 16px 60px; /* top value here is just a fallback before JS measures the header */
-  touch-action:none;
 }
 
 /* hides the browser's own page-level scrollbar in favor of the custom
