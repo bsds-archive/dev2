@@ -153,6 +153,15 @@ html, body{ overflow-x:auto; } /* NOT "visible" — visible stops clipping but d
 .pdf-text-layer{
   position:absolute; left:0; top:0; overflow:hidden;
   line-height:1; opacity:1;
+  /* Without this, a single-finger drag anywhere over the (invisible,
+     but very much present) text spans below gets interpreted by some
+     mobile browsers — Chrome on Android in particular — as the start
+     of a text-selection gesture rather than a page scroll, and the
+     swipe gets swallowed instead of scrolling. pan-y explicitly tells
+     the browser "vertical drags here are for scrolling", while still
+     leaving a deliberate press-and-hold free to start a real text
+     selection, same as it would on desktop. */
+  touch-action: pan-y;
 }
 .pdf-text-layer span{
   color:transparent; position:absolute; white-space:pre; cursor:text;
